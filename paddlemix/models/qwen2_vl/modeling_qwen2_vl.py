@@ -540,7 +540,7 @@ class Qwen2VLAttention(nn.Layer):
         query_states, key_states = apply_multimodal_rotary_pos_emb(
             query_states, key_states, cos, sin, position_ids, self.rope_scaling["mrope_section"]
         )
-        print('q_len, kv_seq_len, query_states, key_states', q_len, kv_seq_len, query_states.shape, key_states.shape)
+        # print('q_len, kv_seq_len, query_states, key_states', q_len, kv_seq_len, query_states.shape, key_states.shape)
         # [1, 2, 1, 128]
 
 
@@ -548,13 +548,8 @@ class Qwen2VLAttention(nn.Layer):
         if past_key_value is not None:
             # cache_kwargs = {"sin": sin, "cos": cos, "cache_position": cache_position}  # Specific to RoPE models
             # key_states, value_states = past_key_value.update(key_states, value_states, self.layer_idx, cache_kwargs)
-            try:
-                key_states = paddle.concat([past_key_value[0], key_states], axis=2)  # qwen2是 axis=1, qwen2_vl是 axis=2
-                value_states = paddle.concat([past_key_value[1], value_states], axis=2)  # qwen2是 axis=1
-            except:
-                #import pdb; pdb.set_trace()
-                key_states = paddle.concat([past_key_value[0].unsqueeze(0), key_states], axis=2)
-                value_states = paddle.concat([past_key_value[1].unsqueeze(0), value_states], axis=2)
+            key_states = paddle.concat([past_key_value[0], key_states], axis=2)  # qwen2是 axis=1, qwen2_vl是 axis=2
+            value_states = paddle.concat([past_key_value[1], value_states], axis=2)  # qwen2是 axis=1
         past_key_value = (key_states, value_states) if use_cache else None
 
 
@@ -761,9 +756,11 @@ class Qwen2VisionTransformerPretrainedModel(Qwen2VLPreTrainedModel):
         )
         cu_seqlens = F.pad(cu_seqlens, (1, 0), value=0)
 
-        for blk in self.blocks:
+        for idx, blk in enumerate(self.blocks):
             hidden_states = blk(hidden_states, cu_seqlens=cu_seqlens, rotary_pos_emb=rotary_pos_emb)
+            #print('idx', idx, hidden_states.sum().item(), hidden_states.mean().item())
 
+        #import pdb; pdb.set_trace()
         return self.merger(hidden_states)
 
 
@@ -855,7 +852,8 @@ class Qwen2VLModel(Qwen2VLPreTrainedModel):
         seq_length_with_past = seq_length
         cache_length = 0
         if past_key_values[0] is not None:
-            cache_length = past_key_values[0][0].shape[1]
+            cache_length = past_key_values[0][0].shape[2] ###
+            #print('cache_length', cache_length)
             seq_length_with_past += cache_length
 
         if inputs_embeds is None:
@@ -870,12 +868,14 @@ class Qwen2VLModel(Qwen2VLPreTrainedModel):
             attention_mask, (batch_size, seq_length), cache_length, inputs_embeds.dtype
         )  # [bs, 1, seq_len, seq_len]
         causal_mask = attention_mask
+        #print('causal_mask: ', causal_mask, causal_mask.shape, causal_mask.sum().item())
 
         if cache_position is None:
             # 只第一次是None, 第一次会计算，后面直接用cache_position
             # past_seen_tokens = past_key_values.get_seq_length() if past_key_values is not None else 0
-            past_seen_tokens = past_key_values[0][0].shape[1] if past_key_values[0] is not None else 0
+            past_seen_tokens = past_key_values[0][0].shape[2] if past_key_values[0] is not None else 0
             cache_position = paddle.arange(past_seen_tokens, past_seen_tokens + inputs_embeds.shape[1])
+            # print('qwen2vlmodel cache_position', cache_position)
 
         if position_ids is None:
             # the hard coded `3` is for temporal, height and width.
@@ -887,14 +887,12 @@ class Qwen2VLModel(Qwen2VLPreTrainedModel):
         # decoder layers
         all_hidden_states = () if output_hidden_states else None
         all_self_attns = () if output_attentions else None
-        next_decoder_cache = None
+        next_decoder_cache = ()
 
-        #import pdb; pdb.set_trace()
         for idx, (decoder_layer) in enumerate(self.layers):
             if output_hidden_states:
                 all_hidden_states += (hidden_states,)
-            # if idx == 1:
-            #     import pdb; pdb.set_trace()
+
             past_key_value = past_key_values[idx] if past_key_values is not None else None
 
             layer_outputs = decoder_layer(
@@ -912,8 +910,7 @@ class Qwen2VLModel(Qwen2VLPreTrainedModel):
 
             hidden_states = layer_outputs[0]
 
-            if use_cache:
-                next_decoder_cache = layer_outputs[2 if output_attentions else 1]
+            next_decoder_cache = next_decoder_cache + (layer_outputs[-1],) if use_cache else None
 
             if output_attentions:
                 all_self_attns += (layer_outputs[1],)
@@ -1064,7 +1061,6 @@ class Qwen2VLForConditionalGeneration(Qwen2VLPreTrainedModel):
             total_input_ids = input_ids
             position_ids = paddle.ones([3, input_ids.shape[0], input_ids.shape[1]], dtype=input_ids.dtype)
             image_index, video_index = 0, 0
-            print('input_ids, attention_mask', input_ids, attention_mask, attention_mask.sum())
             for i, input_ids in enumerate(total_input_ids):
                 if attention_mask is not None:
                     input_ids = input_ids[attention_mask[i] == 1]
@@ -1150,18 +1146,18 @@ class Qwen2VLForConditionalGeneration(Qwen2VLPreTrainedModel):
                 mrope_position_deltas = paddle.zeros([input_ids.shape[0], 1], dtype=input_ids.dtype)
             return position_ids, mrope_position_deltas
 
-    def _update_model_kwargs_for_generation(
+    def update_model_kwargs_for_generation(
         self,
         outputs: ModelOutput,
         model_kwargs: Dict[str, Any],
         is_encoder_decoder: bool = False,
-        num_new_tokens: int = 1,
+        #num_new_tokens: int = 1,
     ) -> Dict[str, Any]:
-        model_kwargs = super()._update_model_kwargs_for_generation(
+        model_kwargs = super().update_model_kwargs_for_generation(
             outputs=outputs,
             model_kwargs=model_kwargs,
             is_encoder_decoder=is_encoder_decoder,
-            num_new_tokens=num_new_tokens,
+            #num_new_tokens=num_new_tokens,
         )
 
         if getattr(outputs, "rope_deltas", None) is not None:
@@ -1264,6 +1260,9 @@ class Qwen2VLForConditionalGeneration(Qwen2VLPreTrainedModel):
         logits = self.lm_head(hidden_states)
         logits = paddle.cast(logits, "float32")
 
+        print('logits', logits.shape, logits.sum().item(), logits.mean().item()) # -1.0352e+09. -1.8916
+        #import pdb; pdb.set_trace()
+
         loss = None
         if labels is not None:
             # Shift so that tokens < n predict n
@@ -1329,20 +1328,20 @@ class Qwen2VLForConditionalGeneration(Qwen2VLPreTrainedModel):
             #     input_ids = input_ids[:, -cache_position.shape[0] :]
             # elif input_ids.shape[1] != cache_position.shape[0]:  # Default case (the "else", a no op, is Exception 2)
             #     input_ids = input_ids[:, cache_position]
-            input_ids = input_ids[:, -1].unsqueeze(axis=-1)
-            #attention_mask = attention_mask[:, -1].unsqueeze(axis=-1)
-            # position_ids = position_ids[:, -1].unsqueeze(-1)
+            input_ids = input_ids[:, -1].unsqueeze(-1)
 
-        print("input_ids", input_ids, input_ids.shape)
-        #import pdb; pdb.set_trace()
+        #print("input_ids, cache_position", input_ids, input_ids.shape, cache_position)
 
         rope_deltas = kwargs.get("rope_deltas", None)
+        #print('kwargs', kwargs)
+        #print('rope_deltas', rope_deltas)
         if attention_mask is not None and position_ids is None:
             if cache_position is None or (cache_position is not None and cache_position[0] == 0):
                 position_ids, rope_deltas = self.get_rope_index(
                     input_ids, image_grid_thw, video_grid_thw, attention_mask
                 )
             else:
+                rope_deltas = paddle.to_tensor([-3504], dtype=paddle.int64)
                 batch_size, seq_length = input_ids.shape
                 delta = (
                     cache_position[0] + rope_deltas if cache_position is not None and rope_deltas is not None else 0
@@ -1351,6 +1350,9 @@ class Qwen2VLForConditionalGeneration(Qwen2VLPreTrainedModel):
                 position_ids = position_ids.reshape([1, -1]).expand([batch_size, -1])
                 position_ids = position_ids + delta
                 position_ids = position_ids.unsqueeze(axis=0).expand([3, -1, -1])
+
+        # print('rope_deltas', rope_deltas)
+        # print('position_ids: ', position_ids)
 
         if cache_position[0] != 0:
             pixel_values = None
