@@ -298,7 +298,7 @@ class VisionAttention(nn.Layer):
         self.num_heads = num_heads
         self.qkv = nn.Linear(dim, dim * 3, bias_attr=True)
         self.proj = nn.Linear(dim, dim)
-        self.head_dim = dim
+        self.head_dim = dim // num_heads # must added
 
     def forward(
         self, hidden_states: paddle.Tensor, cu_seqlens: paddle.Tensor, rotary_pos_emb: paddle.Tensor = None
@@ -533,7 +533,6 @@ class Qwen2VLAttention(nn.Layer):
         kv_seq_len = key_states.shape[-2] # q_len ######## [bs, num_head, seq_len, head_dim]      # qwen2是 [-3]
         if past_key_value is not None:
             kv_seq_len += cache_position[0] + 1
-            # kv_seq_len += cache_position[0] + 1
             # kv_seq_len += past_key_value[0].shape[-2] # qwen2是 [-3]
 
         cos, sin = self.rotary_emb(value_states, seq_len=kv_seq_len)
@@ -541,8 +540,6 @@ class Qwen2VLAttention(nn.Layer):
             query_states, key_states, cos, sin, position_ids, self.rope_scaling["mrope_section"]
         )
         # print('q_len, kv_seq_len, query_states, key_states', q_len, kv_seq_len, query_states.shape, key_states.shape)
-        # [1, 2, 1, 128]
-
 
         # [bs, num_head, seq_len, head_dim]
         if past_key_value is not None:
@@ -566,7 +563,7 @@ class Qwen2VLAttention(nn.Layer):
         # upcast attention to fp32
         attn_weights = nn.functional.softmax(x=attn_weights, axis=-1, dtype="float32")
         attn_weights = nn.functional.dropout(x=attn_weights, p=self.attention_dropout, training=self.training)
-        attn_output = paddle.matmul(attn_weights.cast('bfloat16'), value_states.cast('bfloat16')) # TODO: nifeng03
+        attn_output = paddle.matmul(attn_weights.cast('bfloat16'), value_states.cast('bfloat16')) # TODO: hard code
 
         if attn_output.shape != [bsz, self.num_heads, q_len, self.head_dim]:
             raise ValueError(
@@ -677,9 +674,8 @@ class Qwen2VLPreTrainedModel(PretrainedModel):
     _supports_static_cache = True
 
     def _init_weights(self, layer):
-        std = 0.2  # self.config.initializer_range
+        std = 0.2
         if isinstance(layer, (nn.Linear, nn.Conv3D)):
-            # layer.weight.data.normal_(mean=0.0, std=std)
             nn.initializer.Normal(mean=0.0, std=std)(layer.weight)
             if layer.bias is not None:
                 nn.initializer.Constant(0.0)(layer.bias)
@@ -758,9 +754,7 @@ class Qwen2VisionTransformerPretrainedModel(Qwen2VLPreTrainedModel):
 
         for idx, blk in enumerate(self.blocks):
             hidden_states = blk(hidden_states, cu_seqlens=cu_seqlens, rotary_pos_emb=rotary_pos_emb)
-            #print('idx', idx, hidden_states.sum().item(), hidden_states.mean().item())
 
-        #import pdb; pdb.set_trace()
         return self.merger(hidden_states)
 
 
@@ -853,7 +847,6 @@ class Qwen2VLModel(Qwen2VLPreTrainedModel):
         cache_length = 0
         if past_key_values[0] is not None:
             cache_length = past_key_values[0][0].shape[2] ###
-            #print('cache_length', cache_length)
             seq_length_with_past += cache_length
 
         if inputs_embeds is None:
@@ -868,19 +861,14 @@ class Qwen2VLModel(Qwen2VLPreTrainedModel):
             attention_mask, (batch_size, seq_length), cache_length, inputs_embeds.dtype
         )  # [bs, 1, seq_len, seq_len]
         causal_mask = attention_mask
-        #print('causal_mask: ', causal_mask, causal_mask.shape, causal_mask.sum().item())
 
         if cache_position is None:
-            # 只第一次是None, 第一次会计算，后面直接用cache_position
-            # past_seen_tokens = past_key_values.get_seq_length() if past_key_values is not None else 0
             past_seen_tokens = past_key_values[0][0].shape[2] if past_key_values[0] is not None else 0
             cache_position = paddle.arange(past_seen_tokens, past_seen_tokens + inputs_embeds.shape[1])
-            # print('qwen2vlmodel cache_position', cache_position)
 
         if position_ids is None:
             # the hard coded `3` is for temporal, height and width.
             position_ids = cache_position.reshape([1, 1, -1]).expand([3, inputs_embeds.shape[0], -1])
-            # position_ids = paddle.arange(seq_length, dtype="int64").reshape([1, 1, -1]).expand((3, batch_size, seq_length))
 
         hidden_states = inputs_embeds
 
@@ -1049,10 +1037,6 @@ class Qwen2VLForConditionalGeneration(Qwen2VLPreTrainedModel):
             mrope_position_deltas (`paddle.Tensor` of shape `(batch_size)`)
         """
         spatial_merge_size = self.config.vision_config.spatial_merge_size
-        # print('self.config', self.config)
-        # print('self.config.image_token_id', self.config.image_token_id) # 151655
-        # print('self.config.vision_start_token_id', self.config.vision_start_token_id) # 151655
-
         image_token_id = self.config.image_token_id
         video_token_id = self.config.video_token_id
         vision_start_token_id = self.config.vision_start_token_id
@@ -1160,6 +1144,7 @@ class Qwen2VLForConditionalGeneration(Qwen2VLPreTrainedModel):
             #num_new_tokens=num_new_tokens,
         )
 
+        # return logits + 28 layers k and v
         if getattr(outputs, "rope_deltas", None) is not None:
             model_kwargs["rope_deltas"] = outputs.rope_deltas
 
@@ -1231,6 +1216,7 @@ class Qwen2VLForConditionalGeneration(Qwen2VLPreTrainedModel):
             inputs_embeds = self.model.embed_tokens(input_ids)
             if pixel_values is not None:
                 pixel_values = paddle.cast(pixel_values, paddle.get_default_dtype())
+                #print('image_grid_thw', image_grid_thw) # [[1  , 98 , 146]]
                 image_embeds = self.visual(pixel_values, grid_thw=image_grid_thw)
                 image_mask = input_ids == self.config.image_token_id
                 if self.training:
@@ -1260,7 +1246,12 @@ class Qwen2VLForConditionalGeneration(Qwen2VLPreTrainedModel):
         logits = self.lm_head(hidden_states)
         logits = paddle.cast(logits, "float32")
 
-        print('logits', logits.shape, logits.sum().item(), logits.mean().item()) # -1.0352e+09. -1.8916
+        #print('logits', logits.shape, logits.sum().item(), logits.mean().item()) 
+        # -1.0352e+09. -1.8916
+        #[1, 3602, 151936] -1026800320.0 -1.8762106895446777
+        #[1, 1, 151936] -763207.5 -5.023217678070068
+        # [1, 1, 151936] -395871.1875 -2.6055126190185547
+        # [1, 1, 151936] -104065.578125 -0.6849303245544434
         #import pdb; pdb.set_trace()
 
         loss = None
@@ -1277,6 +1268,7 @@ class Qwen2VLForConditionalGeneration(Qwen2VLPreTrainedModel):
         if not return_dict:
             output = (logits,) + outputs[1:]
             return (loss,) + output if loss is not None else output
+            # return logits + 28 layers k and v
 
         return Qwen2VLCausalLMOutputWithPast(
             loss=loss,
@@ -1290,21 +1282,15 @@ class Qwen2VLForConditionalGeneration(Qwen2VLPreTrainedModel):
     def prepare_inputs_for_generation(
         self,
         input_ids,  # [1, 3602] # [[151644,   8948,    198,  ..., 151644,  77091,    198]]
-        # [1, 1269]
         past_key_values=None,  # DynamicCache
-        # none
         attention_mask=None,  # [1, 3602] 1
-        # [1, 1269] 1
         inputs_embeds=None,  # None
         cache_position=None,  # [   0,    1,    2,  ..., 3599, 3600, 3601]
-        # none
         position_ids=None,  # None
         use_cache=True,
         pixel_values=None,  # [14308, 1176]
-        # [4988, 1176]
         pixel_values_videos=None,
         image_grid_thw=None,  # [1, 3]  # [[  1,  98, 146]]
-        # [1, 3]  # [[1 , 58, 86]]
         video_grid_thw=None,
         **kwargs,
     ):
@@ -1314,14 +1300,11 @@ class Qwen2VLForConditionalGeneration(Qwen2VLPreTrainedModel):
 
         batch_size, seq_length = input_ids.shape
         # print('past_key_values, input_ids, cache_position', past_key_values, input_ids.shape, cache_position)
-        print("input_ids, cache_position, seq_length", input_ids.shape, cache_position, seq_length)
+        #print("input_ids, cache_position, seq_length", input_ids.shape, cache_position, seq_length)
         if past_key_values is None:
-            # past_key_values = tuple([None] * len(self.model.layers))
             cache_position = paddle.arange(input_ids.shape[1])
         else:
             cache_position = paddle.to_tensor([seq_length - 1])
-        # NOTE: to make cache can be clear in-time
-        # past_key_values = list(past_key_values)
 
         if past_key_values is not None:
             # if inputs_embeds is not None:  # Exception 1
@@ -1330,18 +1313,16 @@ class Qwen2VLForConditionalGeneration(Qwen2VLPreTrainedModel):
             #     input_ids = input_ids[:, cache_position]
             input_ids = input_ids[:, -1].unsqueeze(-1)
 
-        #print("input_ids, cache_position", input_ids, input_ids.shape, cache_position)
-
         rope_deltas = kwargs.get("rope_deltas", None)
-        #print('kwargs', kwargs)
-        #print('rope_deltas', rope_deltas)
         if attention_mask is not None and position_ids is None:
             if cache_position is None or (cache_position is not None and cache_position[0] == 0):
                 position_ids, rope_deltas = self.get_rope_index(
                     input_ids, image_grid_thw, video_grid_thw, attention_mask
                 )
             else:
-                rope_deltas = paddle.to_tensor([-3504], dtype=paddle.int64)
+                rope_deltas = paddle.to_tensor([-3504], dtype=paddle.int64) 
+                # TODO: hard code, need to be fixed
+
                 batch_size, seq_length = input_ids.shape
                 delta = (
                     cache_position[0] + rope_deltas if cache_position is not None and rope_deltas is not None else 0

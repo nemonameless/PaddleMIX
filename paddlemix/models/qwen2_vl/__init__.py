@@ -13,10 +13,6 @@
 # limitations under the License.
 
 from .configuration_qwen2_vl import Qwen2VLConfig
-from .processing_qwen2_vl import Qwen2VLProcessor
 from .modeling_qwen2_vl import Qwen2VLForConditionalGeneration, Qwen2VLModel, Qwen2VLPreTrainedModel
-from .image_processing_qwen2_vl import Qwen2VLImageProcessor
 
-__all__ = ['Qwen2VLConfig', 'Qwen2VLProcessor',
-    'Qwen2VLForConditionalGeneration', 'Qwen2VLModel',
-    'Qwen2VLPreTrainedModel', 'Qwen2VLImageProcessor']
+__all__ = ['Qwen2VLConfig', 'Qwen2VLForConditionalGeneration', 'Qwen2VLModel', 'Qwen2VLPreTrainedModel']
