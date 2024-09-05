@@ -17,8 +17,8 @@ from paddlenlp.transformers import Qwen2Tokenizer
 from paddlemix.processors.qwen2_vl_processing import Qwen2VLProcessor, Qwen2VLImageProcessor, process_vision_info
 
 
-MODEL_NAME = "Qwen2-VL-2B-Instruct_pd"
-#MODEL_NAME = "Qwen2-VL-7B-Instruct_pd"
+# MODEL_NAME = "Qwen/Qwen2-VL-2B-Instruct"
+MODEL_NAME = "Qwen/Qwen2-VL-7B-Instruct"
 model = Qwen2VLForConditionalGeneration.from_pretrained(MODEL_NAME, dtype="bfloat16")
 
 image_processor = Qwen2VLImageProcessor.from_pretrained(MODEL_NAME)
@@ -36,7 +36,7 @@ messages = [
         "content": [
             {
                 "type": "image",
-                "image": "./demo.jpeg",
+                "image": "https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen-VL/assets/demo.jpeg",
             },
             {"type": "text", "text": "Describe this image."},
         ],
@@ -47,6 +47,7 @@ messages = [
 image_inputs, video_inputs = process_vision_info(messages)
 
 question = 'Describe this image.'
+question = 'what the fucking is that?'
 text = f'<|im_start|>system\nYou are a helpful assistant.<|im_end|>\n<|im_start|>user\n<|vision_start|><|image_pad|><|vision_end|>{question}<|im_end|>\n<|im_start|>assistant\n'
 
 inputs = processor(
