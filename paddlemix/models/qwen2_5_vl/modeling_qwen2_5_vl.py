@@ -349,7 +349,7 @@ def apply_multimodal_rotary_pos_emb(q, k, cos, sin, mrope_section, unsqueeze_dim
     Explanation:
         Multimodal 3D rotary position embedding is an extension to 1D rotary position embedding. The input embedding
         sequence contains vision (images / videos) embedding and text embedding or just contains text embedding. For
-        vision embedding part, we apply rotary position embedding on temporal, height and width dimension seperately.
+        vision embedding part, we apply rotary position embedding on temporal, height and width dimension separately.
         Here we split the channel dimension to 3 chunks for the temporal, height and width rotary position embedding.
         For text embedding part, we just apply 1D rotary position embedding. The three rotary position index (temporal,
         height and width) of text embedding is always the same, so the text embedding rotary position embedding has no
@@ -513,7 +513,7 @@ class Qwen2_5_VLVisionAttention(nn.Layer):
         v = v.transpose([1, 0, 2])
         attn_weights = paddle.matmul(q, k.transpose([0, 2, 1])) / math.sqrt(self.head_dim)
         attn_weights = attn_weights + attention_mask
-        attn_weights = nn.functional.softmax(attn_weights, axis=-1, dtype="float32")
+        attn_weights = nn.functional.softmax(attn_weights, axis=-1)
         attn_output = paddle.matmul(attn_weights, v)
         attn_output = attn_output.transpose([1, 0, 2])
         attn_output = attn_output.reshape([seq_length, -1])
@@ -553,7 +553,7 @@ class Qwen2_5_VLVisionFlashAttention2(nn.Layer):
             .squeeze(0)
             .reshape([seq_length, -1])
         )
-        attn_output = attn_output.astype(paddle.bfloat16)
+
         attn_output = self.proj(attn_output)
         return attn_output
 
@@ -597,7 +597,7 @@ class Qwen2_5_VLVisionSdpaAttention(nn.Layer):
             dropout_p=0.0,
         )
 
-        attn_output = attn_output.transpose([1, 0, 2]).astype(paddle.bfloat16)
+        attn_output = attn_output.transpose([1, 0, 2])
         attn_output = attn_output.reshape([seq_length, -1])
         attn_output = self.proj(attn_output)
 
@@ -881,7 +881,7 @@ class Qwen2_5_VLAttention(paddle.nn.Layer):
 
         if attention_mask is not None:
             attn_weights = attn_weights + attention_mask
-        attn_weights = nn.functional.softmax(attn_weights, axis=-1, dtype="float32")
+        attn_weights = nn.functional.softmax(attn_weights, axis=-1)
         attn_weights = nn.functional.dropout(x=attn_weights, p=self.attention_dropout, training=self.training)
         attn_output = paddle.matmul(attn_weights.cast(self.config.dtype), value_states.cast(self.config.dtype))
 
