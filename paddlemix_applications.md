@@ -98,6 +98,7 @@
     - 🖼️ 功能：将图像转换为视频，提供高质量渲染
     - 🔥 热度：🔥🔥
 
+
 21. [动漫生成](https://aistudio.baidu.com/projectdetail/8572944)
     - 🎥 类型：视频生成
     - 🖌️ 功能：基于open-sora以及appflow实现动画风格视频生成
@@ -159,252 +160,191 @@
     - 🎨 功能：生成风格一致的音乐和图像
     - 🔥 热度：🔥
 
-## 📖 四、文本类
-33. [试题生成系统](https://aistudio.baidu.com/projectdetail/8802580)
-    - 🖌️ 类型：多模态理解与文本生成
-    - 📚 功能：试卷的智能分析和题目生成
-    - 🔥 热度：🔥🔥🔥
-
-34. [QuizWiz智能批改试卷](https://aistudio.baidu.com/projectdetail/8802580)
-    - 🧒 类型：多模态理解与文本生成
-    - 📚 功能：识别试卷内容并进行评分
-    - 🔥 热度：🔥🔥
-
-35. [高数解题小助手](https://aistudio.baidu.com/projectdetail/8795589)
-    - 📜 类型：多模态理解
-    - 💻 功能：图像理解与文本生成
-    - 🔥 热度：🔥🔥
-
-36. [短视频脚本智能生成](https://aistudio.baidu.com/projectdetail/8789078)
-    - 📷 类型：多模态理解
-    - 📱 功能：图像理解与文本生成
-    - 🔥 热度：🔥🔥🔥
-
-## 🎊 五、节日主题创作
-37. [国庆写真生成器](https://aistudio.baidu.com/projectdetail/8334575)
+## 🎊 四、节日主题创作
+33. [国庆写真生成器](https://aistudio.baidu.com/projectdetail/8334575)
     - 🎀 类型：图像生成
     - 👗 功能：专属国庆节写真生成
     - 🔥 热度：🔥🔥🔥 
 
-38. [中秋民俗舞火龙](https://aistudio.baidu.com/projectdetail/8318522)
+34. [中秋民俗舞火龙](https://aistudio.baidu.com/projectdetail/8318522)
     - 🐉 类型：图像生成
     - 🔥 功能：舞火龙庆典图绘制
     - 🔥 热度：🔥🔥🔥 
 
-39. [兔绘爱国情：童心海报梦工厂](https://aistudio.baidu.com/projectdetail/8288021)
+35. [兔绘爱国情：童心海报梦工厂](https://aistudio.baidu.com/projectdetail/8288021)
     - 🐰 类型：图像生成
     - 🎨 功能：爱国主题童趣海报
     - 🔥 热度：🔥🔥
 
-40. [创艺·幻绘月饼艺术图](https://aistudio.baidu.com/projectdetail/8540279)
+36. [创艺·幻绘月饼艺术图](https://aistudio.baidu.com/projectdetail/8540279)
     - 🥮 类型：图像生成
     - 🎨 功能：月饼艺术创作
     - 🔥 热度：🔥🔥
 
-41. [PaddleMIX中秋贺卡生成器](https://aistudio.baidu.com/projectdetail/8541174)
+37. [PaddleMIX中秋贺卡生成器](https://aistudio.baidu.com/projectdetail/8541174)
     - 🌙 类型：图像生成
     - ✉️ 功能：中秋节贺卡定制
     - 🔥 热度：🔥🔥
 
-42. [国庆英雄颂](https://aistudio.baidu.com/projectdetail/8352450)
+38. [国庆英雄颂](https://aistudio.baidu.com/projectdetail/8352450)
     - 🇨🇳 类型：多模态创作
     - 📣 功能：历史的英雄故事以生动的声音和视觉形式呈现
     - 🔥 热度：🔥🔥
 
-43. [国庆烟火绘梦](https://aistudio.baidu.com/projectdetail/8352778)
+39. [国庆烟火绘梦](https://aistudio.baidu.com/projectdetail/8352778)
     - 🎆 类型：文生图
     - 🎇 功能：数字烟花的生成
     - 🔥 热度：🔥🔥
 
-44. [绘梦国庆-缤纷国庆贺卡](https://aistudio.baidu.com/projectdetail/8542328)
+40. [绘梦国庆-缤纷国庆贺卡](https://aistudio.baidu.com/projectdetail/8542328)
     - 🎉 类型：图像生成
     - 🎊 功能：个性化国庆贺卡创作
     - 🔥 热度：🔥
 
-45. [感恩有你-感恩节海报设计](https://aistudio.baidu.com/projectdetail/8500805)
+41. [感恩有你-感恩节海报设计](https://aistudio.baidu.com/projectdetail/8500805)
     - 🍔 类型：图像生成
     - 🍖 功能：感恩节海报生成
     - 🔥 热度：🔥
 
-46. [魔境创想-万圣节贺卡生成](https://aistudio.baidu.com/projectdetail/8500805)
+42. [魔境创想-万圣节贺卡生成](https://aistudio.baidu.com/projectdetail/8500805)
     - 🎃 类型：图像生成
     - 👻 功能：个性化的万圣节贺卡生成
     - 🔥 热度：🔥
 
-47. [圣诞贺卡生成](https://aistudio.baidu.com/projectdetail/8587918)
+43. [圣诞贺卡生成](https://aistudio.baidu.com/projectdetail/8587918)
     - 🎄 类型：图像生成
     - 🎅 功能：基于SDXL进行DreamBooth微调，生成生成圣诞贺卡
     - 🔥 热度：🔥
 
-48. [圣诞形象生成](https://aistudio.baidu.com/projectdetail/8683393)
+44. [圣诞形象生成](https://aistudio.baidu.com/projectdetail/8683393)
     - 🎅 类型：图像生成
     - 🎄 功能：圣诞风格图像转绘
     - 🔥 热度：🔥
 
-## 🤖 六、智能助手类
-49. [炉石传说卡牌设计助手](https://aistudio.baidu.com/projectdetail/8543362)
+## 🤖 五、智能助手类
+45. [炉石传说卡牌设计助手](https://aistudio.baidu.com/projectdetail/8543362)
     - 🎮 类型：多模态设计
     - 🃏 功能：基于ErnieSDK的游戏卡牌设计
     - 🔥 热度：🔥🔥
 
-50. [智能宠物识别与养护助手](https://aistudio.baidu.com/projectdetail/8299163)
+46. [智能宠物识别与养护助手](https://aistudio.baidu.com/projectdetail/8299163)
     - 🐾 类型：图像识别/分析
     - 🐱 功能：基于QwenVL的宠物护理
     - 🔥 热度：🔥🔥
 
-51. [PaddleMIX](https://aistudio.baidu.com/projectdetail/8609632)
+47. [PaddleMIX](https://aistudio.baidu.com/projectdetail/8609632)
     - 🎮 类型：视频生成
     - 🃏 功能：武侠视频生成
     - 🔥 热度：🔥
 
-52. [宝可梦卡片生成](https://aistudio.baidu.com/projectdetail/8614628)
+48. [宝可梦卡片生成](https://aistudio.baidu.com/projectdetail/8614628)
     - 💎 类型：多模态设计
     - 🃏 功能：基于LoRa微调实现宝可梦卡片生成
     - 🔥 热度：🔥🔥🔥
 
-53. [文心鉴宝](https://aistudio.baidu.com/projectdetail/8657790)
+49. [文心鉴宝](https://aistudio.baidu.com/projectdetail/8657790)
     - 🎮 类型：智能鉴宝
     - 🃏 功能：AI分析宝物，进行估价
     - 🔥 热度：🔥
 
-54. [鉴宝大师](https://aistudio.baidu.com/projectdetail/8643820)
+50. [鉴宝大师](https://aistudio.baidu.com/projectdetail/8643820)
     - 🎮 类型：智能鉴宝
     - 🃏 功能：AI分析国画，进行鉴宝
     - 🔥 热度：🔥
 
-55. [旅行喵](https://aistudio.baidu.com/projectdetail/8597614)
+51. [旅行喵](https://aistudio.baidu.com/projectdetail/8597614)
     - 🎮 类型：旅行规划
     - 🃏 功能：基于文心4.0进行旅行规划
     - 🔥 热度：🔥
 
-56. [🔥PP-DocBee🔥](https://aistudio.baidu.com/projectdetail/8718266)
+52. [🔥PP-DocBee🔥](https://aistudio.baidu.com/projectdetail/8718266)
     - 🎮 类型：文档理解
     - 🃏 功能：文档图像理解
     - 🔥 热度：🔥🔥🔥
 
-57. [美食探店助手](https://aistudio.baidu.com/projectdetail/8718266)
-    - 🍔 类型：图像分析
-    - 🍗 功能：图像理解与文本生成
-    - 🔥 热度：🔥
-
-## 💡 七、创新应用类
-58. [多模态数字艺术创生](https://aistudio.baidu.com/projectdetail/8382636)
+## 💡 六、创新应用类
+53. [多模态数字艺术创生](https://aistudio.baidu.com/projectdetail/8382636)
     - 🎨 类型：艺术创作
     - 🖼️ 功能：数字艺术创作与鉴赏
     - 🔥 热度：🔥🔥
 
-59. [教学辅助多模态图文生成](https://aistudio.baidu.com/projectdetail/8372762)
+54. [教学辅助多模态图文生成](https://aistudio.baidu.com/projectdetail/8372762)
     - 📚 类型：教育应用
     - 🎓 功能：教学辅助创作工具
     - 🔥 热度：🔥🔥
 
-60. ["海参纪念币"文创设计](https://aistudio.baidu.com/projectdetail/8386127)
+55. ["海参纪念币"文创设计](https://aistudio.baidu.com/projectdetail/8386127)
     - 💰 类型：文创设计
     - 🎨 功能：纪念币艺术设计
     - 🔥 热度：🔥🔥
 
-61. [艺术风格迁移](https://aistudio.baidu.com/projectdetail/8549441)
+56. [艺术风格迁移](https://aistudio.baidu.com/projectdetail/8549441)
     - 🎨 类型：风格迁移
     - 🖼️ 功能：多模态艺术风格迁移
     - 🔥 热度：🔥🔥
 
-62. [爱国卡通角色故事创作](https://aistudio.baidu.com/projectdetail/8356273)
+57. [爱国卡通角色故事创作](https://aistudio.baidu.com/projectdetail/8356273)
     - 📚 类型：多模态创作
     - 🎭 功能：基于ERNIE SDK的角色故事创作
     - 🔥 热度：🔥
 
-63. [云顶天宫：盗墓笔记场景重现](https://aistudio.baidu.com/projectdetail/8486711)
+58. [云顶天宫：盗墓笔记场景重现](https://aistudio.baidu.com/projectdetail/8486711)
     - 📚 类型：多模态创作
     - 🎭 功能：将小说中场景深度还原
     - 🔥 热度：🔥
 
-64. [绘梦长空·风筝韵事](https://aistudio.baidu.com/projectdetail/8404865)
+59. [绘梦长空·风筝韵事](https://aistudio.baidu.com/projectdetail/8404865)
     - 🎉 类型：图像理解
     - 📚 功能：讲述中国传统风筝背后的动人故事与制作工艺
     - 🔥 热度：🔥 
 
-65. [电商场景图生成](https://aistudio.baidu.com/projectdetail/8641146)
+60. [电商场景图生成](https://aistudio.baidu.com/projectdetail/8641146)
     - 🎉 类型：电商应用
     - 🎭 功能：商品场景图生成
     - 🔥 热度：🔥🔥
 
-66. [智能解题助手](https://aistudio.baidu.com/projectdetail/8598265)
+61. [智能解题助手](https://aistudio.baidu.com/projectdetail/8598265)
     - 🎉 类型：教育应用
     - 📚 功能：智能解题辅导助手
     - 🔥 热度：🔥
 
-67. [MobileAgent](https://aistudio.baidu.com/projectdetail/8660179)
+62. [MobileAgent](https://aistudio.baidu.com/projectdetail/8660179)
     - 🎉 类型：多模态智能体
     - 🎭 功能：AI手机助手
     - 🔥 热度：🔥
 
-68. [人生模拟器](https://aistudio.baidu.com/projectdetail/8949354)
-    - 🏊 类型：图像理解与文本分析
-    - 🤵 功能：图文事件分析与场景生成
-    - 🔥 热度：🔥
-
-69. [随身吐槽相机](https://aistudio.baidu.com/projectdetail/8876937)
-    - 📚 类型：图像理解与文本生成
-    - 🦸‍♂️ 功能：根据图片生成文本段子
-    - 🔥 热度：🔥
-
-70. [智能相册](https://aistudio.baidu.com/projectdetail/8848591)
-    - 📚 类型：词云生成
-    - 📷 功能：生成个性化的词云相册
-    - 🔥 热度：🔥
-
-## 八、其他（教程类）
-71. [基于PaddleMIX的数据集行为标签分类器训推实例](https://aistudio.baidu.com/projectdetail/7917712)
+## 七、其他
+63. [基于PaddleMIX的数据集行为标签分类器训推实例](https://aistudio.baidu.com/projectdetail/7917712)
     - 🎓 类型：图像理解
     - 🌋 功能：基于LLaVA的行为分类
     - 🔥 热度：🔥🔥🔥
     
-72. [PaddleMIX入门AIGC应用](https://aistudio.baidu.com/projectdetail/7583868)
+64. [PaddleMIX入门AIGC应用](https://aistudio.baidu.com/projectdetail/7583868)
     - 📟 类型：多模态生成
     - 📷 功能：图像生成、音频生成、图像变换、图像超分辨率
     - 🔥 热度：🔥🔥
 
-73. [PaddleMIX DiT高性能推理实战](https://aistudio.baidu.com/projectdetail/8261962)
+65. [PaddleMIX DiT高性能推理实战](https://aistudio.baidu.com/projectdetail/8261962)
     - 🎨 类型：图像生成
     - 📚 功能：基于DiT结构的图像生成
     - 🔥 热度：🔥🔥
 
-74. [PaddleMIX玩转Stable Diffusion 3](https://aistudio.baidu.com/projectdetail/8494762)
+66. [PaddleMIX玩转Stable Diffusion 3](https://aistudio.baidu.com/projectdetail/8494762)
     - 🔔 类型：图像生成
     - 🎮 功能：基于Stable Diffusion 3的图像生成
     - 🔥 热度：🔥🔥
 
-75. [基于PaddleMIX的数据集行为标签分类器训推实例](https://aistudio.baidu.com/projectdetail/8229498)
+67. [基于PaddleMIX的数据集行为标签分类器训推实例](https://aistudio.baidu.com/projectdetail/8229498)
     - 🎈 类型：图像理解
     - 💎 功能：LLaVA模型训练与使用
     - 🔥 热度：🔥🔥
 
-76. [PaddleMIX入门视频生成](https://aistudio.baidu.com/projectdetail/8221041)
+68. [PaddleMIX入门视频生成](https://aistudio.baidu.com/projectdetail/8221041)
     - 🎥 类型：视频生成
     - 📺 功能：基于SVD和OpenSora的视频生成
     - 🔥 热度：🔥
 
-77. [基于PaddleMIX的高速文生图推理](https://aistudio.baidu.com/projectdetail/8232803)
+69. [基于PaddleMIX的高速文生图推理](https://aistudio.baidu.com/projectdetail/8232803)
     - 🎓 类型：图像生成
     - 🎨 功能：LCM模型的快速图像生成
     - 🔥 热度：🔥
-
-78. [多模态理解趣味应用](https://aistudio.baidu.com/projectdetail/8940626)
-    - 📷 类型：多模态理解
-    - 🖌️ 功能：问答助手、动漫二创、图像理解
-    - 🔥 热度：🔥🔥🔥
-
-79. [一站式训推多模态理解模型DeepSeek-VL2](https://aistudio.baidu.com/projectdetail/8889929)
-    - 🎮 类型：多模态理解
-    - 🖌️ 功能：多模态理解模型训练推理
-    - 🔥 热度：🔥🔥🔥
-
-80. [DeepSeek-VL2快速体验](https://aistudio.baidu.com/projectdetail/8807257)
-    - 📷 类型：多模态理解
-    - 🎨 功能：图像描述
-    - 🔥 热度：🔥🔥🔥
-
-81. [Janus快速体验](https://aistudio.baidu.com/projectdetail/8798721)
-    - 🖼️ 类型：多模态理解
-    - 🎨 功能：图像理解与图像生成
-    - 🔥 热度：🔥🔥🔥

@@ -29,7 +29,6 @@ python deploy/qwen2_vl/single_image_infer.py\
     --inference_model True \
     --mode dynamic \
     --dtype bfloat16 \
-    --output_via_mq False \
     --benchmark True 
 
 
@@ -49,7 +48,6 @@ python deploy/qwen2_vl/single_image_infer.py\
 #     --inference_model True \
 #     --mode dynamic \
 #     --dtype bfloat16 \
-#     --output_via_mq False \
 #     --quant_type "weight_only_int8" \
 #     --benchmark True
 
@@ -69,5 +67,4 @@ python deploy/qwen2_vl/single_image_infer.py\
 #     --inference_model True \
 #     --mode dynamic \
 #     --dtype bfloat16 \
-#     --output_via_mq False \
 #     --benchmark True 
